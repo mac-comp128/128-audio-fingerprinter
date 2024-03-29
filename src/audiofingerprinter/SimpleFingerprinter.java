@@ -1,6 +1,7 @@
 package audiofingerprinter;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
@@ -11,27 +12,31 @@ import java.util.List;
 public class SimpleFingerprinter {
 
     public static void main(String[] args){
+        try{
+            URL musicDirectory = SimpleFingerprinter.class.getResource("/music");
+            File path = new File(musicDirectory.toURI());
+            System.out.println("Loading db...");
 
-        URL musicDirectory = SimpleFingerprinter.class.getResource("/music");
-        String path = musicDirectory.getPath();
-        System.out.println("Loading db...");
+            SongDatabase db = new SongDatabase();
 
-        SongDatabase db = new SongDatabase();
-
-        //TODO: initialize the AudioFingerPrinter with your implementing class and pass it the song database.
-        AudioFingerprinter rec = null;
-        
-        db.setFingerprinter(rec);
-        db.loadDatabase(path);
-        String song = SimpleFingerprinter.class.getResource("/music/CarolOfTheBells.mp3").getPath();
-        System.out.println("Recognizing...");
-        File fileIn = new File(song);
-        List<String> results = rec.recognize(fileIn);
-        int i = 1;
-        System.out.println("Found "+results.size()+" results.");
-        for(String s : results){
-            System.out.println(i + ": "+ s);
-            i++;
+            //TODO: initialize the AudioFingerPrinter with your implementing class and pass it the song database.
+            AudioFingerprinter rec = null;
+            
+            db.setFingerprinter(rec);
+            db.loadDatabase(path);
+            URL song = SimpleFingerprinter.class.getResource("/music/CarolOfTheBells.mp3");
+            System.out.println("Recognizing...");
+  
+            File fileIn = new File(song.toURI());
+            List<String> results = rec.recognize(fileIn);
+            int i = 1;
+            System.out.println("Found "+results.size()+" results.");
+            for(String s : results){
+                System.out.println(i + ": "+ s);
+                i++;
+            }
+        } catch(URISyntaxException e){
+            e.printStackTrace();
         }
     }
 }

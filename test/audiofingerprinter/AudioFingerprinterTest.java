@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,16 +62,20 @@ public class AudioFingerprinterTest {
     @Test
     public void testRecognize(){
 
-        URL musicDirectory = SimpleFingerprinter.class.getResource("/music");
-        String path = musicDirectory.getPath();
-        songDB.loadDatabase(path);
+        try{
+            URL musicDirectory = SimpleFingerprinter.class.getResource("/music");
+            File path = new File(musicDirectory.toURI());
+            songDB.loadDatabase(path);
 
-        String song = SimpleFingerprinter.class.getResource("/music/CarolOfTheBells.mp3").getPath();
-        File fileIn = new File(song);
-        List<String> results = audioFingerprinter.recognize(fileIn);
-        assertTrue(results.get(0).startsWith("CarolOfTheBells")); // should have aboue 990 matches
-        assertTrue(results.get(1).startsWith("JoyToTheWorld")); // should have about 5 matches
-        assertTrue(results.get(2).startsWith("AdagioInC")); // should have about 3 matches
-        assertTrue(results.get(3).startsWith("AllaWhatParody")); // should have about 2 matches
+            URL song = SimpleFingerprinter.class.getResource("/music/CarolOfTheBells.mp3");
+            File fileIn = new File(song.toURI());
+            List<String> results = audioFingerprinter.recognize(fileIn);
+            assertTrue(results.get(0).startsWith("CarolOfTheBells")); // should have aboue 990 matches
+            assertTrue(results.get(1).startsWith("JoyToTheWorld")); // should have about 5 matches
+            assertTrue(results.get(2).startsWith("AdagioInC")); // should have about 3 matches
+            assertTrue(results.get(3).startsWith("AllaWhatParody")); // should have about 2 matches
+        } catch(URISyntaxException e){
+            e.printStackTrace();
+        }
     }
 }

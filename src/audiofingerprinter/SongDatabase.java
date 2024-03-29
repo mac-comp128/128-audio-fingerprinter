@@ -45,7 +45,7 @@ public class SongDatabase {
      * Overloaded constructor to syncronously load the database at the same time the object is constructed.
      * @param directoryPath
      */
-    public SongDatabase(String directoryPath){
+    public SongDatabase(File directoryPath){
         this();
         loadDatabase(directoryPath);
     }
@@ -73,15 +73,6 @@ public class SongDatabase {
         for(int i=0; i < audioFiles.length; i++){
             processFile(audioFiles[i]);
         }
-    }
-
-    /**
-     * Overloaded method to take a String path rather than a File object indicating the directory to load files from.
-     * @param directoryPath
-     */
-    public void loadDatabase(String directoryPath){
-        File dir = new File(directoryPath);
-        loadDatabase(dir);
     }
 
     /**
