@@ -38,14 +38,14 @@ The discrete sampling described above represents data in the **Time Domain**. Ea
 
 Sound waves like the square box wave shown below can be created by combining multiple sine waves of different frequencies. An algorithm called the Fast Fourier Transform (FFT) is used to convert the time-domain representation, shown in red, to the frequency-domain representation, shown in blue on the right. The component frequencies, spread across the frequency spectrum, are represented as peaks in the frequency domain.
 
-<img src="doc/Fourier_synthesis_square_wave_animated.gif" width="49%"> <img src="doc/Fourier_transform_time_and_frequency_domains_(small).gif" width="49%">
+<img src="docs/Fourier_synthesis_square_wave_animated.gif" width="49%"> <img src="docs/Fourier_transform_time_and_frequency_domains_(small).gif" width="49%">
 Left Image Source: René Schwarz, CC BY-SA 3.0 via Wikimedia Commons
 
 ### Audio Fingerprinting
 
 The key idea with music recognition is to create a unique "fingerprint" that identifies a song based on its frequencies. When trying to identify a sound clip, we can match the clip's fingerprint against a database of song fingerprints to determine a matching song.
 
-If we just converted a song to the frequency domain, we would have all the frequencies and their magnitudes, but no correspondence to when they happen in the song. That would not let you match a shorter clip of the song to the entire song. Instead, we'll divide the original song wave into smaller chunks of 4096 bytes (4kb), each representing about a 10th of a second of sound, and convert each individual time chunk into the frequency domain.
+If we just converted a song to the frequency domain, we would have all the frequencies and their magnitudes, but no correspondence to when they happen in the song. That would not let you match a shorter clip of the song to the entire song.Instead, we'll divide the original song wave into smaller chunks of 4096 bytes (4kb), each representing about a 10th of a second of sound, and convert each individual time chunk into the frequency domain.
 
 #### Determining Keypoints
 
@@ -73,7 +73,7 @@ To make for easy audio search, this hash signature becomes the key in a HashMap.
 
 #### Song Identification Matching
 
-To identify a song that is currently playing, record a clip of the song, and run the recording through the same audio fingerprinting process as above. Then search the map for matching hash tags for each time chunk.
+To identify a song that is currently playing, we record a clip of the song, and run the recording through the same audio fingerprinting process as above. Then we can start searching the map for matching hash tags for each time chunk.
 
 Many of the hash tags will correspond to the music identifier of multiple songs. For example, it may be that some piece of song A sounds exactly like some piece of song B (See [Axis of Awesome - Four Chord Song](https://www.youtube.com/watch?v=5pidokakU4I)). So we need to take into account the timing information as well.
 
@@ -146,7 +146,7 @@ Complete the `processAudioData` method in the `SongDatabase` class. This method 
 
 Test your code using the `SimpleFingerprinter` class. You will need to initialize the `AudioFingerprinter rec` variable to an instance of your implementing class.
 
-The CarolOfTheBells mp3 that is included in the music directory should have somewhere between 980-1000 matches. Make sure the results are returned in sorted order as specified in the interface definition.
+The CarolOfTheBells mp3 that is included in the music directory should have somewhere between 980-1000 matches. Make sure the results are returned in sorted order as specified in the interface definition. The number of matches may vary somewhat each time you run it because when the mp3 file is loaded the format is converted from a stereo file to mono which can lead to some numerical imprecision. The `AudioFingerprinterTest.testRecognize()` method uses pre-converted files containing just the raw bytes to avoid this issue. Make sure that it passes the test.
 
 Once `SimpleFingerprinter` is working, complete the TODO comment in the MainApp class. You should now be able to run the MainApp using the process described above under the Getting Started section.
 
