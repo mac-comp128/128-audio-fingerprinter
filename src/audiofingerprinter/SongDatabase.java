@@ -132,16 +132,25 @@ public class SongDatabase {
     }
 
     /**
-     * Process a file. This gets the raw data, converts it to the frequency domain using the fft, determines the keypoints,
-     * hashes the keypoints, and then adds the corresponding datapoints to the matcherDB.
+     * Process a file. This gets the raw data and passes it to processAudioData
      * @param file to process
      */
     public void processFile(File file){
         byte[] audioRawData = getRawData(file);
+        processAudioData(audioRawData, file.getName());
+    }
+
+    /**
+     * Process the raw audio data: converts it to the frequency domain using the fft, determines the keypoints,
+     * hashes the keypoints, and then adds the corresponding datapoints to the matcherDB.
+     * @param audioRawData byte array of sound samples
+     * @param songName - the name of the song file to audio data came from
+     */
+    public void processAudioData(byte[] audioRawData, String songName){
         if (audioRawData != null) {
             int songId = nextSongId;
             nextSongId++;
-            //TODO: Add the song file to songNames map using the songID as the key. You can get the nume of the file using file.getName().
+            //TODO: Add the song file to songNames map using the songID as the key.
 
             //TODO: Create a fingerprint of the file by:
             // 1. converting the raw data to the frequency domain
@@ -153,7 +162,7 @@ public class SongDatabase {
 
 
         }
-        System.out.println("Finished analyzing " + file.getName());
+        System.out.println("Finished analyzing " + songName);
     }
 
     /**

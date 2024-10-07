@@ -44,7 +44,7 @@ public interface AudioFingerprinter {
      *                      double im = results[time][2*freq+1];
      *                      double mag = Math.log(Math.sqrt(re * re + im * im) + 1);
      * @return a 2D array where the first index represents the time slice, and the second index contains the highest frequencies
-     *          for the following ranges with that time slice: [30 Hz - 40 Hz), [40 Hz - 80 Hz) and [80 Hz - 120 Hz) for the low tones (covering bass guitar,
+     *          for the following ranges with that time slice: [40 Hz - 80 Hz) and [80 Hz - 120 Hz) for the low tones (covering bass guitar,
      *          for example), and [120 Hz - 180 Hz) and [180 Hz - 300 Hz) for the middle and higher tones (covering vocals and most other instruments).
      *          Note that the '[' means the end value is included, and '(' means that it is excluded.
      */

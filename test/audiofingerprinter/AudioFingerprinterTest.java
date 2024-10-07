@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +46,7 @@ public class AudioFingerprinterTest {
         }
 
         long[][] result = audioFingerprinter.determineKeyPoints(rawData);
-        assertArrayEquals(new long[][]{{39, 79, 119, 179, 299}, {30, 40, 80, 120, 180}}, result);
+        assertArrayEquals(new long[][]{{79, 119, 179, 299}, {40, 80, 120, 180}}, result);
     }
 
     @Test
@@ -62,20 +65,56 @@ public class AudioFingerprinterTest {
     @Test
     public void testRecognize(){
 
+        // This test the overall algorithm. Note we are using raw byte files rather than mp3s because
+        // loading the mp3s requires sampling which can cause the byte output, and thus the number of matches
+        // to vary each run.
         try{
-            URL musicDirectory = SimpleFingerprinter.class.getResource("/music");
+            URL musicDirectory = SimpleFingerprinter.class.getResource("/raw-byte-files");
             File path = new File(musicDirectory.toURI());
-            songDB.loadDatabase(path);
+            File[] audioFiles = getRawFilesFromDirectory(path);
+            System.out.println("Found "+audioFiles.length+" files.");
+            for(int i=0; i < audioFiles.length; i++){
+                byte[] rawAudioData = Files.readAllBytes(audioFiles[i].toPath());
+                songDB.processAudioData(rawAudioData, audioFiles[i].getName());
+            }
 
-            URL song = SimpleFingerprinter.class.getResource("/music/CarolOfTheBells.mp3");
+            URL song = SimpleFingerprinter.class.getResource("/raw-byte-files/CarolOfTheBells.raw");
             File fileIn = new File(song.toURI());
-            List<String> results = audioFingerprinter.recognize(fileIn);
-            assertTrue(results.get(0).startsWith("CarolOfTheBells")); // should have aboue 990 matches
-            assertTrue(results.get(1).startsWith("JoyToTheWorld")); // should have about 5 matches
-            assertTrue(results.get(2).startsWith("AdagioInC")); // should have about 3 matches
-            assertTrue(results.get(3).startsWith("AllaWhatParody")); // should have about 2 matches
+            byte[] rawAudioData = Files.readAllBytes(fileIn.toPath());
+            List<String> results = audioFingerprinter.recognize(rawAudioData);
+            assertTrue(results.get(0).startsWith("CarolOfTheBells")); 
+            assertTrue(results.get(0).contains("1015")); //Should have 1015 matches.
+            assertTrue(results.get(1).startsWith("JoyToTheWorld"));
+            assertTrue(results.get(1).contains("4")); //Should have 4 matches.
+            assertTrue(results.get(2).startsWith("AdagioInC"));
+            assertTrue(results.get(2).contains("2")); //Should have 2 matches.
+            assertTrue(results.get(3).startsWith("AllaWhatParody"));
+            assertTrue(results.get(3).contains("1")); //Should have 1 match.
         } catch(URISyntaxException e){
             e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns an array of file objects containing the raw files that are found in the directory
+     * @param directory to search
+     * @return array of raw files from the directory.
+     */
+    private File[] getRawFilesFromDirectory(File directory){
+        if (directory.isDirectory()) {
+
+            return directory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String filename) {
+                    return filename.endsWith(".raw");
+                }
+            });
+        }
+        else {
+            // if directory is not actually a directory or doesn't exist, return a zero length array.
+            return new File[0];
+        }
+
     }
 }
