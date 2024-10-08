@@ -112,7 +112,7 @@ This repository has included code to display a user interface and get you starte
 
 ![Image showing steps to run MainApp through gradle](./gradle.png)
 
-### Task 0: Getting to know the existing code
+### Task 0: Getting to know algorithm and existing code
 
 Read through the existing code and make sure you understand how the different classes and methods work together. In particular,
 there are two classes you will work closely with:
@@ -121,7 +121,9 @@ there are two classes you will work closely with:
 
 `AudioFingerprinter` is an interface that you will need to implement in your own class. It specifies the method decomposition needed to fingerprint and recognize a song.
 
-Before you continue, you should answer the following questions. We won't collect your answers for this assignment, but if you have questions on whether you understand the algorithm correctly then you should come to office hours to discuss it with your preceptors or professor.
+#### Part 1: Questions
+
+This homework has two parts. To get started part 1 has you answer the following question. **Submit your answers to the questions before the Part 1 Homework deadline.** Part 2 will be to implement the remaining parts of the implementation. Your answers will be graded on effort shown, not necessarily correctness. If you are struggling to understand the algorithm then you should come to office hours to discuss it with your preceptors or professor.
 
 1. In your own words, describe a general overview of the steps that need to be accomplished in order to recognize a song.
 2. What is the purpose of the `DataPoint` class and its relationship to the `matcherDB` instance variable in the `SongDatabase` class? 
